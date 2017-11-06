@@ -1,0 +1,2 @@
+# Mines
+ The Minesweeper helper
