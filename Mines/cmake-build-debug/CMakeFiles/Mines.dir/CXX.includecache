@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/igor/CLionProjects/Mines/main.cpp
+settings.h
+/home/igor/CLionProjects/Mines/settings.h
+
+/home/igor/CLionProjects/Mines/settings.cpp
+settings.h
+/home/igor/CLionProjects/Mines/settings.h
+
+/home/igor/CLionProjects/Mines/settings.h
+iostream
+-
+set
+-
+math.h
+-
+vector
+-
+algorithm
+-
+functional
+-
+zconf.h
+-
+
