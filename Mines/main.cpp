@@ -1,27 +1,113 @@
 #include "settings.h"
 
-int main()
+AllIn Prepare(char *StartPath)
 {
-    /*Cell q(0,0), w(0,1), e(0,2), r(1,0), t(1,2), y(2,0), u(2,2),i(3,0),o(3,1),p(3,2);
-    vector<std::reference_wrapper<Cell>> cells;
-    cells.push_back(ref(q)); cells.push_back(ref(w)); cells.push_back(ref(e)); cells.push_back(ref(r)); cells.push_back(ref(t));
-    cells.push_back(ref(y)); cells.push_back(ref(u));
-    Group g1(cells,4);
-    vector<std::reference_wrapper<Cell>> cells1;
-    cells1.push_back(ref(r)); cells1.push_back(ref(t)); cells1.push_back(ref(y)); cells1.push_back(ref(u));
-    cells1.push_back(ref(i)); cells1.push_back(ref(o)); cells1.push_back(ref(p));
-    Group g2(cells1,2);
-    vector<Group> groups;
-    groups.push_back(g1); groups.push_back(g2);*/
-    vector<Group> groups;
-    Cell q(0,1), w(1,0), e(1,1), r(2,0), t(2,1), y(3,1);
-    vector<std::reference_wrapper<Cell>> cells;
-    cells.push_back(ref(q)); cells.push_back(ref(w)); cells.push_back(ref(e));
-    vector<std::reference_wrapper<Cell>> cells1;
-    cells1.push_back(ref(r)); cells1.push_back(ref(t)); cells1.push_back(ref(y));
-    Group g1(cells,3), g2(cells1,3);
-    groups.push_back(g1); groups.push_back(g2);
-    FillVar(groups);
-    for (auto i:groups) cout << i;
+    ifstream fr(StartPath);
+    if(!fr.is_open())
+    {
+
+    }
+    int wid, hei;
+    char temp;
+    AllIn Result;
+    fr >> wid; fr >> hei;
+    for (int i=0;i<hei;i++)
+    {
+        for (int j =0;j<wid;j++)
+        {
+            fr >> temp;
+            if (temp == '?')
+            {
+                Result.Cells.push_back(Cell(i,j));
+            }
+            else if(((int)temp >= 49) && ((int)temp <= 56))
+            {
+                Result.Points.push_back(point(i,j,((int)temp-48)));
+            }
+            else if (temp == '!') Result.Mines.push_back(make_pair(i,j));
+        }
+    }
+    fr.close();
+    return Result;
+}
+
+void Match(vector<point> &Help, vector<pair<int,int>> &Mines)
+{
+    for (auto &i : Help)
+    {
+        for (auto j : Mines)
+        {
+            if (Neighbor(i.x,i.y,j.first,j.second)) i.num_of_mines -= 1;
+        }
+    }
+}
+
+void WriteAns(char *ExtPath,const vector<Cell> &Result)
+{
+    ofstream wr(ExtPath);
+    for (auto i : Result)
+    {
+        wr << i << '\n';
+    }
+    wr.close();
+}
+
+bool CheckParam(char *f1, char*f2, char*f3)
+{
+    ifstream F1(f1);
+    ifstream F2(f2);
+    ifstream F3(f3);
+    if ((!F1.is_open()) || (!F2.is_open()) || (!F3.is_open()))
+    {
+        cout << "\n Check Args! \n";
+        return false;
+    }
+    F1.close();
+    F2.close();
+    F3.close();
+    return true;
+}
+
+bool Test(char* F1, char *F2)
+{
+    ifstream f1(F1);
+    ifstream f2(F2);
+    int x1, y1, x2,y2;
+    float var1, var2;
+    while(!f1.eof())
+    {
+        f1 >> x1 >> y1 >> var1;
+        f2 >> x2 >> y2 >> var2;
+        if ((x1 != x2) || (y1 != y2) || (abs(var1 - var2) >0.01)) return false;
+    }
+    return true;
+}
+
+int main(int argc, char *argv[])
+{
+    if (CheckParam(argv[1],argv[2],argv[3])) {
+        AllIn Start = Prepare(argv[1]);
+        Match(Start.Points, Start.Mines);
+        vector<Group> Result;
+        vector<vector<reference_wrapper<Cell>>> Storage;
+        for (auto i: Start.Points) {
+            Storage.push_back(vector<reference_wrapper<Cell>>());
+            for (auto &j:Start.Cells) {
+                if (Neighbor(i.x, i.y, j.X(), j.Y())) (Storage.end()-1)->push_back(ref(j));
+            }
+            Result.push_back(Group(*(Storage.end()-1), i.num_of_mines));
+        }
+        FillVar(Result);
+        for (auto &i : Start.Cells) {
+            i.SetVar(round(i.GetVar() * 100) / 100);
+        }
+        WriteAns(argv[2], Start.Cells);
+        if(Test (argv[2], argv[3])) cout << "\n Correct! \n";
+        else cout << "\n Incorrect! \n";
+    }
     return 0;
 }
+
+
+
+
