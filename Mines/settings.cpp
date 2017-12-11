@@ -13,28 +13,6 @@ bool operator != (const Cell & one, const Cell & other)
     if ((one.x == other.x)&&(one.y==other.y)) return false;
     return true;
 }
-bool operator <= (const Cell & one, const Cell & other)
-{
-    if (sqrt(one.x*one.x+one.y*one.y)<=sqrt(other.x*other.x+other.y*other.y)) return true;
-    return true;
-}
-
-bool operator >= (const Cell & one, const Cell & other)
-{
-    if (sqrt(one.x*one.x+one.y*one.y)<=sqrt(other.x*other.x+other.y*other.y)) return true;
-    return false;
-}
-bool operator < (const Cell & one, const Cell & other)
-{
-    if (sqrt(one.x*one.x+one.y*one.y)<sqrt(other.x*other.x+other.y*other.y)) return true;
-    return true;
-}
-
-bool operator > (const Cell & one, const Cell & other)
-{
-    if (sqrt(one.x*one.x+one.y*one.y)<sqrt(other.x*other.x+other.y*other.y)) return true;
-    return false;
-}
 
 void Cell::SetVar(float _var)
 {
