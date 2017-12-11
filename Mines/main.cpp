@@ -76,6 +76,8 @@ bool Test(char* F1, char *F2)
         f2 >> x2 >> y2 >> var2;
         if ((x1 != x2) || (y1 != y2) || (abs(var1 - var2) >0.01)) return false;
     }
+    f1.close();
+    f2.close();
     return true;
 }
 
