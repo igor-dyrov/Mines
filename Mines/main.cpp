@@ -3,10 +3,6 @@
 AllIn Prepare(char *StartPath)
 {
     ifstream fr(StartPath);
-    if(!fr.is_open())
-    {
-
-    }
     int wid, hei;
     char temp;
     AllIn Result;
