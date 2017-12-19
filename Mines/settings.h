@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <fstream>
 #include <set>
 #include <cmath>
@@ -25,6 +26,10 @@ public:
     Cell(int _x,int _y): x(_x),y(_y){var =0;}
     friend bool operator != (const Cell & one,const Cell & other);
     friend bool operator == (const Cell & one,const Cell & other);
+    friend bool operator < (const Cell & one,const Cell & other);
+    friend bool operator > (const Cell & one,const Cell & other);
+    friend bool operator <= (const Cell & one,const Cell & other);
+    friend bool operator >= (const Cell & one,const Cell & other);
     friend ostream& operator << (ostream &,const Cell&);
     int X(){return x;}
     int Y(){return y;}

@@ -1,5 +1,10 @@
 #include "settings.h"
 
+void ThrowError(string er)
+{
+    cout << '\n' << er << '\n';
+}
+
 AllIn Prepare(char *StartPath)
 {
     ifstream fr(StartPath);
@@ -7,10 +12,25 @@ AllIn Prepare(char *StartPath)
     char temp;
     AllIn Result;
     fr >> wid; fr >> hei;
+    if ((!wid)||(!hei))
+    {
+        ThrowError(string("No Width or Height"));
+        return Result;
+    }
+    else if ((wid <0) || (hei<0))
+    {
+        ThrowError(string("Wrong width or height"));
+        return Result;
+    }
     for (int i=0;i<hei;i++)
     {
         for (int j =0;j<wid;j++)
         {
+            if (fr.eof())
+            {
+                ThrowError(string("Too small field"));
+                return Result;
+            }
             fr >> temp;
             if (temp == '?')
             {
@@ -21,6 +41,16 @@ AllIn Prepare(char *StartPath)
                 Result.Points.push_back(point(i,j,((int)temp-48)));
             }
             else if (temp == '!') Result.Mines.push_back(make_pair(i,j));
+            else if(((int)temp < 49) || ((int)temp > 56))
+            {
+                ThrowError(string("Wrong weight"));
+                return Result;
+            }
+            else
+            {
+                ThrowError(string("Unknown symbol"));
+                return Result;
+            }
         }
     }
     fr.close();
@@ -68,8 +98,8 @@ bool Test(char* F1, char *F2)
 {
     ifstream f1(F1);
     ifstream f2(F2);
-    int x1, y1, x2,y2;
-    float var1, var2;
+    int x1=0, y1=0, x2=0,y2=0;
+    float var1=0.0, var2=0.0;
     while(!f1.eof())
     {
         f1 >> x1 >> y1 >> var1;
@@ -100,8 +130,8 @@ int main(int argc, char *argv[])
             i.SetVar(round(i.GetVar() * 100) / 100);
         }
         WriteAns(argv[2], Start.Cells);
-        if(Test (argv[2], argv[3])) cout << "\n Correct! \n";
-        else cout << "\n Incorrect! \n";
+        if(Test (argv[2], argv[3])) cout << "\n Correct work of main algorithm! \n";
+        else cout << "\n Incorrect work of main algorithm! \n";
     }
     return 0;
 }

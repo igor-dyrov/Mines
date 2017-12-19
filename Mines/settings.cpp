@@ -13,6 +13,28 @@ bool operator != (const Cell & one, const Cell & other)
     if ((one.x == other.x)&&(one.y==other.y)) return false;
     return true;
 }
+bool operator <= (const Cell & one, const Cell & other)
+{
+    if (sqrt(one.x*one.x+one.y*one.y)<=sqrt(other.x*other.x+other.y*other.y)) return true;
+    return true;
+}
+
+bool operator >= (const Cell & one, const Cell & other)
+{
+    if (sqrt(one.x*one.x+one.y*one.y)<=sqrt(other.x*other.x+other.y*other.y)) return true;
+    return false;
+}
+bool operator < (const Cell & one, const Cell & other)
+{
+    if (sqrt(one.x*one.x+one.y*one.y)<sqrt(other.x*other.x+other.y*other.y)) return true;
+    return true;
+}
+
+bool operator > (const Cell & one, const Cell & other)
+{
+    if (sqrt(one.x*one.x+one.y*one.y)<sqrt(other.x*other.x+other.y*other.y)) return true;
+    return false;
+}
 
 void Cell::SetVar(float _var)
 {
@@ -46,7 +68,13 @@ void FillVar(vector<Group> &Groups)
         {
             if (itr.get().GetVar() != -1.0)
             {
-                itr.get().SetVar(1 - (1- (float)grp.mines_around / (float)grp.cells.size())*(1-itr.get().GetVar()));
+                float cff = 1-itr.get().GetVar();
+                if((cff < 0.0) || (cff > 1.0))
+                {
+                    cout << "\n Bad field \n";
+                    return;
+                }
+                itr.get().SetVar(1 - (1- (float)grp.mines_around / (float)grp.cells.size())*cff);
             }
             else
             {
@@ -62,6 +90,11 @@ void FillVar(vector<Group> &Groups)
         {
             float sum = 0.0;
             for (auto &itr : grp.cells) sum+=itr.get().GetVar();
+            if (abs(sum-(float)grp.mines_around)>1.0)
+            {
+                cout << "\n Bad field \n";
+                return;
+            }
             if(abs(sum-(float)grp.mines_around)>0.01)
             {
                 repeat = true;
